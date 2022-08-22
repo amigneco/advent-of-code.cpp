@@ -14,5 +14,6 @@ configure:
 build:
 	cmake --build "$(build_dir)" -j 6
 
-test:
-	cd "$(build_dir)" && make test
+test: build
+	find build -iname '*_test' -execdir ctest --output-on-failure \;
+	# cd "$(build_dir)" && make test

@@ -1,22 +1,43 @@
-#include "lib.hpp"
+#include "../../common/lib.hpp"
 #include <algorithm>
 #include <limits>
 
-uint32_t count_increasing(std::vector<uint32_t> *input) {
-  return std::count_if(
-      input->begin(), input->end(),
-      [prev = std::numeric_limits<uint32_t>::max()](uint32_t curr) mutable {
-        bool res = curr > prev;
-        prev = curr;
-        return res;
-      });
+using namespace std;
+
+vector<int> parse(istream &input) {
+  vector<int> res;
+
+  for (string line; getline(input, line);) {
+    res.push_back(stoi(line));
+  }
+
+  return res;
 }
 
-uint32_t count_increasing_groups(std::vector<uint32_t> *input) {
-  std::vector<uint32_t> groups(input->size(), 0);
-  for (uint32_t i = 0; i < input->size() - 2; i += 1) {
+int count_increasing(vector<int> *input) {
+  return count_if(input->begin(), input->end(),
+                  [prev = numeric_limits<int>::max()](const int &curr) mutable {
+                    bool res = curr > prev;
+                    prev = curr;
+                    return res;
+                  });
+}
+
+int count_increasing_groups(vector<int> *input) {
+  vector<int> groups(input->size(), 0);
+  for (size_t i = 0; i < input->size() - 2; i += 1) {
     groups.at(i) = input->at(i) + input->at(i + 1) + input->at(i + 2);
   }
 
   return count_increasing(&groups);
+}
+
+int part1(istream &input) {
+  auto data = parse(input);
+  return count_increasing(&data);
+}
+
+int part2(istream &input) {
+  auto data = parse(input);
+  return count_increasing_groups(&data);
 }

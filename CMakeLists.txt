@@ -16,12 +16,19 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 
-function(advent_of_code year day)
+function(advent_of_code YEAR DAY PART_1_RESULT PART_2_RESULT)
 	include(GoogleTest)
 
-	set(LIB_TARGET "${year}_${day}_lib")
-	set(MAIN_TARGET "${year}_${day}_main")
-	set(TEST_TARGET "${year}_${day}_test")
+	set(LIB_TARGET "${YEAR}_${DAY}_lib")
+	set(MAIN_TARGET "${YEAR}_${DAY}_main")
+	set(TEST_TARGET "${YEAR}_${DAY}_test")
+
+
+	configure_file(example.txt example.txt COPYONLY)
+	configure_file(${CMAKE_SOURCE_DIR}/common/lib.hpp lib.hpp)
+	configure_file(${CMAKE_SOURCE_DIR}/common/main.cpp main.cpp)
+	configure_file(${CMAKE_SOURCE_DIR}/common/test.cpp test.cpp)
+
 
 	add_library(${LIB_TARGET} lib.cpp lib.hpp)
 
@@ -31,6 +38,7 @@ function(advent_of_code year day)
 	add_executable(${TEST_TARGET} test.cpp)
 	target_link_libraries(${TEST_TARGET} ${LIB_TARGET} GTest::gtest_main)
 	gtest_discover_tests(${TEST_TARGET})
+
 endfunction()
 
 
