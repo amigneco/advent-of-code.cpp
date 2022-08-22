@@ -1,0 +1,37 @@
+cmake_minimum_required(VERSION 3.24)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(advent-of-code)
+
+
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG release-1.12.1
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+
+function(advent_of_code year day)
+	include(GoogleTest)
+
+	set(LIB_TARGET "${year}_${day}_lib")
+	set(MAIN_TARGET "${year}_${day}_main")
+	set(TEST_TARGET "${year}_${day}_test")
+
+	add_library(${LIB_TARGET} lib.cpp lib.hpp)
+
+	add_executable(${MAIN_TARGET} main.cpp)
+	target_link_libraries(${MAIN_TARGET} ${LIB_TARGET})
+
+	add_executable(${TEST_TARGET} test.cpp)
+	target_link_libraries(${TEST_TARGET} ${LIB_TARGET} GTest::gtest_main)
+	gtest_discover_tests(${TEST_TARGET})
+endfunction()
+
+
+add_subdirectory(2021)

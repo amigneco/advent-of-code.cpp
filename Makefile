@@ -1,4 +1,18 @@
-.PHONY: configure
+build_dir := ./build
+
+.PHONY: all clean configure build test
+
+all: build
+
+clean:
+	cd "$(build_dir)" && make clean
 
 configure:
-	bazel run @hedron_compile_commands//:refresh_all
+	mkdir -p "$(build_dir)"
+	cmake -S "." -B "$(build_dir)"
+
+build:
+	cmake --build "$(build_dir)" -j 6
+
+test:
+	cd "$(build_dir)" && make test
